@@ -36,6 +36,10 @@ def main():
                         help="场景输出目录")
     parser.add_argument("--limit", "-n", type=int, default=None,
                         help="限制生成数量")
+    parser.add_argument("--use-api", action="store_true",
+                        help="使用 DeepSeek API 生成")
+    parser.add_argument("--api-key", type=str, default=None,
+                        help="DeepSeek API Key")
     args = parser.parse_args()
 
     instructions = load_instructions(args.input)
@@ -43,7 +47,8 @@ def main():
         instructions = instructions[:args.limit]
 
     print(f"加载 {len(instructions)} 条指令")
-    print(f"输出目录: {args.output}\n")
+    print(f"输出目录: {args.output}")
+    print(f"生成模式: {'API (DeepSeek)' if args.use_api else '模板匹配'}\n")
 
     stats = Counter()
     start_time = time.time()
@@ -56,7 +61,10 @@ def main():
         print(f"[{i+1}/{len(instructions)}] {inst[:50]}...")
 
         try:
-            scene, score, matched = generate_scenario(inst, cat if cat != "unsafe" else None)
+            scene, score, matched, mode = generate_scenario(
+                inst, cat if cat != "unsafe" else None,
+                use_api=args.use_api, api_key=args.api_key
+            )
             save_scene(scene, args.output, scene_id)
             stats[scene["category"]] += 1
             stats["total"] += 1
