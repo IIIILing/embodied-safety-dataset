@@ -7,8 +7,26 @@ import argparse
 import json
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
+import matplotlib.font_manager as fm
 import numpy as np
 from pathlib import Path
+
+# macOS 中文字体
+_font_paths = [
+    "/System/Library/Fonts/PingFang.ttc",
+    "/System/Library/Fonts/STHeiti Light.ttc",
+    "/System/Library/Fonts/STHeiti Medium.ttc",
+    "/Library/Fonts/Arial Unicode.ttf",
+]
+_chinese_font = None
+for _fp in _font_paths:
+    if Path(_fp).exists():
+        _chinese_font = fm.FontProperties(fname=_fp)
+        break
+
+plt.rcParams["font.family"] = "sans-serif"
+if _chinese_font:
+    plt.rcParams["font.sans-serif"] = [_chinese_font.get_name()]
 
 
 def load_scene(scene_path: str) -> dict:

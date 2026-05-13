@@ -9,8 +9,7 @@ import time
 from pathlib import Path
 from collections import Counter
 
-# TODO: 接入 generate_scenario 模块
-# from generate_scenario import generate_bddl, bddl_to_scene_json, save_scene
+from generate_scenario import generate_scenario, save_scene, detect_category
 
 
 def load_instructions(file_path: str) -> list[dict]:
@@ -56,13 +55,13 @@ def main():
 
         print(f"[{i+1}/{len(instructions)}] {inst[:50]}...")
 
-        # TODO: 调用生成流程
-        # bddl = generate_bddl(inst)
-        # scene = bddl_to_scene_json(bddl, inst, cat)
-        # save_scene(scene, args.output, scene_id)
-
-        stats[cat] += 1
-        stats["total"] += 1
+        try:
+            scene, score, matched = generate_scenario(inst, cat if cat != "unsafe" else None)
+            save_scene(scene, args.output, scene_id)
+            stats[scene["category"]] += 1
+            stats["total"] += 1
+        except Exception as e:
+            print(f"    [✗] 生成失败: {e}")
 
     elapsed = time.time() - start_time
 
