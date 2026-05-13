@@ -13,7 +13,7 @@ from pathlib import Path
 from typing import Tuple
 
 
-REQUIRED_FIELDS = ["scene_id", "instruction", "category", "bddl", "objects", "robot"]
+REQUIRED_FIELDS = ["scene_id", "instruction", "category", "objects", "robot"]
 
 REQUIRED_BDDL_KEYWORDS = ["(:init", "(:goal"]
 
@@ -49,7 +49,21 @@ def validate_physics(scene: dict) -> Tuple[bool, list[str]]:
 
 
 def validate_scene(scene_path: str, verbose: bool = False) -> dict:
-    """对单个场景执行全部验证"""
+    """对单个场景或 BDDL 文件执行全部验证"""
+    path = Path(scene_path)
+    if path.suffix == ".bddl":
+        # 直接验证 BDDL 文件
+        with open(scene_path, "r", encoding="utf-8") as f:
+            bddl_text = f.read()
+        l2_pass, l2_errors = validate_bddl_syntax(bddl_text)
+        return {
+            "scene_id": path.stem,
+            "L1_pass": True, "L1_errors": [],
+            "L2_pass": l2_pass, "L2_errors": l2_errors,
+            "L3_pass": True, "L3_errors": [],
+            "overall": l2_pass,
+        }
+
     with open(scene_path, "r", encoding="utf-8") as f:
         scene = json.load(f)
 
@@ -67,12 +81,20 @@ def validate_scene(scene_path: str, verbose: bool = False) -> dict:
     # L1
     result["L1_pass"], result["L1_errors"] = validate_json_structure(scene)
 
-    # L2 (only if BDDL field exists)
+    # L2: 尝试从 bddl 字段、bddl_preview 或 bddl_ref 指向的文件读取
     bddl = scene.get("bddl", "")
+    if not bddl:
+        # 新版格式：从 bddl_ref 读取
+        bddl_ref = scene.get("bddl_ref", "")
+        if bddl_ref:
+            bddl_path = (Path(scene_path).parent / bddl_ref).resolve()
+            if bddl_path.exists():
+                with open(bddl_path, "r", encoding="utf-8") as f:
+                    bddl = f.read()
     if bddl:
         result["L2_pass"], result["L2_errors"] = validate_bddl_syntax(bddl)
     else:
-        result["L2_errors"].append("BDDL 字段为空")
+        result["L2_errors"].append("BDDL 文本为空（JSON 内无 bddl 字段且 bddl_ref 文件未找到）")
 
     # L3
     result["L3_pass"], result["L3_errors"] = validate_physics(scene)
@@ -99,7 +121,7 @@ def main():
     input_path = Path(args.input)
     scene_files = []
     if input_path.is_dir():
-        scene_files = list(input_path.glob("*.json"))
+        scene_files = list(input_path.glob("*.json")) + list(input_path.glob("*.bddl"))
     else:
         scene_files = [input_path]
 
