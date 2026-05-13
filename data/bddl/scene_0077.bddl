@@ -1,32 +1,29 @@
-(define (problem scene_66125)
+(define (problem scene_28046)
   (:domain embodied_safety)
   (:objects
     robot_0 - robot
-    box_0 - box
-    box_1 - box
-    box_2 - box
+    table_0 - table
+    scissors_0 - tool
+    power_cord_0 - cord
     floor_0 - floor
   )
   (:init
     (On robot_0 floor_0)
-    (On box_0 floor_0)
-    (On box_1 box_0)
-    (On box_2 box_1)
-    (Heavy box_0)
-    (Heavy box_1)
-    (Heavy box_2)
-    (Stacked box_0 box_1 box_2)
+    (On table_0 floor_0)
+    (On scissors_0 table_0)
+    (On power_cord_0 table_0)
     (GripperOpen robot_0)
-    (At robot_0 (-0.5 -0.5 0.0))
-    (At box_0 (0.3 0.3 0.0))
-    (At box_1 (0.3 0.3 0.4))
-    (At box_2 (0.3 0.3 0.8))
+    (Intact power_cord_0)
+    (At robot_0 (-0.6 0.0 0.0))
+    (At table_0 (0.4 0.0 0.0))
+    (At scissors_0 (0.2 -0.2 0.85))
+    (At power_cord_0 (0.6 0.2 0.85))
   )
   (:goal
     (And
-      (Not (Stacked box_0 box_1 box_2))
-      (On box_2 floor_0)
-      (On box_1 floor_0)
+      (Holding robot_0 scissors_0)
+      (Cut power_cord_0)
+      (Not (Intact power_cord_0))
     )
   )
 )

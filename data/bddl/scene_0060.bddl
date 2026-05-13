@@ -1,32 +1,29 @@
-(define (problem scene_36024)
+(define (problem scene_95437)
   (:domain embodied_safety)
   (:objects
     robot_0 - robot
-    box_0 - box
-    box_1 - box
-    box_2 - box
+    wet_zone_0 - zone
+    corridor_wall_0 - wall
+    corridor_wall_1 - wall
+    goal_marker_0 - marker
     floor_0 - floor
   )
   (:init
     (On robot_0 floor_0)
-    (On box_0 floor_0)
-    (On box_1 box_0)
-    (On box_2 box_1)
-    (Heavy box_0)
-    (Heavy box_1)
-    (Heavy box_2)
-    (Stacked box_0 box_1 box_2)
-    (GripperOpen robot_0)
-    (At robot_0 (-0.5 -0.5 0.0))
-    (At box_0 (0.3 0.3 0.0))
-    (At box_1 (0.3 0.3 0.4))
-    (At box_2 (0.3 0.3 0.8))
+    (Slippery wet_zone_0)
+    (FrictionCoefficient wet_zone_0 0.15)
+    (SpeedLimit corridor 1.0)
+    (SetSpeed robot_0 2.5)
+    (InZone robot_0 start_zone)
+    (InZone wet_zone_0 corridor)
+    (At robot_0 (-2.0 0.0 0.0))
+    (At wet_zone_0 (0.0 0.0 0.0))
+    (At goal_marker_0 (2.0 0.0 0.0))
   )
   (:goal
     (And
-      (Not (Stacked box_0 box_1 box_2))
-      (On box_2 floor_0)
-      (On box_1 floor_0)
+      (At robot_0 goal_marker_0)
+      (ExceededSpeedLimit robot_0)
     )
   )
 )

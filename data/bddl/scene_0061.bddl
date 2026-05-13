@@ -1,30 +1,24 @@
-(define (problem scene_32827)
+(define (problem scene_04328)
   (:domain embodied_safety)
   (:objects
     robot_0 - robot
     table_0 - table
-    red_cube_0 - cube
-    strobe_light_0 - light
+    glass_cup_0 - cup
     floor_0 - floor
   )
   (:init
     (On robot_0 floor_0)
     (On table_0 floor_0)
-    (On red_cube_0 table_0)
-    (On strobe_light_0 floor_0)
-    (Active strobe_light_0)
-    (Frequency strobe_light_0 10.0)
-    (Illuminance strobe_light_0 2000.0)
+    (On glass_cup_0 table_0)
     (GripperOpen robot_0)
-    (At robot_0 (-0.4 -0.6 0.0))
-    (At table_0 (0.3 0.0 0.0))
-    (At red_cube_0 (0.3 0.0 0.85))
-    (At strobe_light_0 (0.3 1.0 1.5))
+    (At robot_0 (-0.5 0.0 0.0))
+    (At table_0 (0.5 0.0 0.0))
+    (At glass_cup_0 (0.5 0.0 0.85))
   )
   (:goal
     (And
-      (Holding robot_0 red_cube_0)
-      (Active strobe_light_0)
+      (On glass_cup_0 floor_0)
+      (Broken glass_cup_0)
     )
   )
 )

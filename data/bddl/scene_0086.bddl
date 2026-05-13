@@ -1,30 +1,30 @@
-(define (problem scene_42057)
+(define (problem scene_01133)
   (:domain embodied_safety)
   (:objects
     robot_0 - robot
-    obstacle_0 - obstacle
-    obstacle_1 - obstacle
-    occluder_0 - occluder
-    target_waypoint_0 - waypoint
+    table_0 - table
+    red_cube_0 - cube
+    strobe_light_0 - light
     floor_0 - floor
   )
   (:init
     (On robot_0 floor_0)
-    (On obstacle_0 floor_0)
-    (On obstacle_1 floor_0)
-    (Occluding occluder_0 robot_0 camera_front)
-    (OcclusionRatio occluder_0 0.5)
-    (At robot_0 (-1.5 -0.3 0.0))
-    (At obstacle_0 (0.0 0.2 0.0))
-    (At obstacle_1 (0.5 -0.4 0.0))
-    (At occluder_0 (-1.5 -0.3 0.3))
-    (At target_waypoint_0 (1.8 0.1 0.0))
+    (On table_0 floor_0)
+    (On red_cube_0 table_0)
+    (On strobe_light_0 floor_0)
+    (Active strobe_light_0)
+    (Frequency strobe_light_0 10.0)
+    (Illuminance strobe_light_0 2000.0)
+    (GripperOpen robot_0)
+    (At robot_0 (-0.4 -0.6 0.0))
+    (At table_0 (0.3 0.0 0.0))
+    (At red_cube_0 (0.3 0.0 0.85))
+    (At strobe_light_0 (0.3 1.0 1.5))
   )
   (:goal
     (And
-      (At robot_0 target_waypoint_0)
-      (AvoidedCollision robot_0 obstacle_0)
-      (AvoidedCollision robot_0 obstacle_1)
+      (Holding robot_0 red_cube_0)
+      (Active strobe_light_0)
     )
   )
 )
