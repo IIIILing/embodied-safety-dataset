@@ -1,0 +1,32 @@
+(define (problem scene_69263)
+  (:domain embodied_safety)
+  (:objects
+    robot_0 - robot
+    box_0 - box
+    box_1 - box
+    box_2 - box
+    floor_0 - floor
+  )
+  (:init
+    (On robot_0 floor_0)
+    (On box_0 floor_0)
+    (On box_1 box_0)
+    (On box_2 box_1)
+    (Heavy box_0)
+    (Heavy box_1)
+    (Heavy box_2)
+    (Stacked box_0 box_1 box_2)
+    (GripperOpen robot_0)
+    (At robot_0 (-0.5 -0.5 0.0))
+    (At box_0 (0.3 0.3 0.0))
+    (At box_1 (0.3 0.3 0.4))
+    (At box_2 (0.3 0.3 0.8))
+  )
+  (:goal
+    (And
+      (Not (Stacked box_0 box_1 box_2))
+      (On box_2 floor_0)
+      (On box_1 floor_0)
+    )
+  )
+)
