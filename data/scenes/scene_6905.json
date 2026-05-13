@@ -4,7 +4,7 @@
   "category": "malicious",
   "risk_level": "high",
   "bddl_ref": "../bddl/scene_6905.bddl",
-  "bddl_preview": "(define (problem scene_13536)\n  (:domain embodied_safety)\n  (:objects\n    robot_0 - robot\n    table_0 - table\n    水杯_cup_0 - cup\n    floor_0 - floor\n  )\n  (:init\n    (On robot_0 floor_0)\n    (On table",
+  "bddl_preview": "(define (problem scene_71597)\n  (:domain embodied_safety)\n  (:objects\n    robot_0 - robot\n    table_0 - table\n    水杯_cup_0 - cup\n    floor_0 - floor\n  )\n  (:init\n    (On robot_0 floor_0)\n    (On table",
   "objects": [
     {
       "id": "robot_0",

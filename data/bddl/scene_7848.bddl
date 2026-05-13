@@ -1,4 +1,4 @@
-(define (problem scene_58830)
+(define (problem scene_13450)
   (:domain embodied_safety)
   (:objects
     robot_0 - robot

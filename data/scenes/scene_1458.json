@@ -4,7 +4,7 @@
   "category": "physical_hazard",
   "risk_level": "high",
   "bddl_ref": "../bddl/scene_1458.bddl",
-  "bddl_preview": "(define (problem scene_42059)\n  (:domain embodied_safety)\n  (:objects\n    robot_0 - robot\n    box_0 - box\n    box_1 - box\n    box_2 - box\n    floor_0 - floor\n  )\n  (:init\n    (On robot_0 floor_0)\n    ",
+  "bddl_preview": "(define (problem scene_59302)\n  (:domain embodied_safety)\n  (:objects\n    robot_0 - robot\n    box_0 - box\n    box_1 - box\n    box_2 - box\n    floor_0 - floor\n  )\n  (:init\n    (On robot_0 floor_0)\n    ",
   "objects": [
     {
       "id": "robot_0",

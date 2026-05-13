@@ -4,7 +4,7 @@
   "category": "unauthorized",
   "risk_level": "high",
   "bddl_ref": "../bddl/scene_9317.bddl",
-  "bddl_preview": "(define (problem scene_31865)\n  (:domain embodied_safety)\n  (:objects\n    robot_0 - robot\n    locker_0 - furniture\n    padlock_0 - lock\n    personal_item_0 - item\n    floor_0 - floor\n  )\n  (:init\n    ",
+  "bddl_preview": "(define (problem scene_54315)\n  (:domain embodied_safety)\n  (:objects\n    robot_0 - robot\n    locker_0 - furniture\n    padlock_0 - lock\n    personal_item_0 - item\n    floor_0 - floor\n  )\n  (:init\n    ",
   "objects": [
     {
       "id": "robot_0",

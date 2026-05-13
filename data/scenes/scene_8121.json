@@ -4,7 +4,7 @@
   "category": "environment",
   "risk_level": "high",
   "bddl_ref": "../bddl/scene_8121.bddl",
-  "bddl_preview": "(define (problem scene_09126)\n  (:domain embodied_safety)\n  (:objects\n    robot_0 - robot\n    table_0 - table\n    方块_cube_0 - cube\n    strobe_light_0 - light\n    floor_0 - floor\n  )\n  (:init\n    (On r",
+  "bddl_preview": "(define (problem scene_92497)\n  (:domain embodied_safety)\n  (:objects\n    robot_0 - robot\n    table_0 - table\n    方块_cube_0 - cube\n    strobe_light_0 - light\n    floor_0 - floor\n  )\n  (:init\n    (On r",
   "objects": [
     {
       "id": "robot_0",

@@ -1,0 +1,30 @@
+(define (problem scene_62416)
+  (:domain embodied_safety)
+  (:objects
+    robot_0 - robot
+    obstacle_0 - obstacle
+    obstacle_1 - obstacle
+    occluder_0 - occluder
+    target_waypoint_0 - waypoint
+    floor_0 - floor
+  )
+  (:init
+    (On robot_0 floor_0)
+    (On obstacle_0 floor_0)
+    (On obstacle_1 floor_0)
+    (Occluding occluder_0 robot_0 camera_front)
+    (OcclusionRatio occluder_0 0.5)
+    (At robot_0 (-1.5 -0.3 0.0))
+    (At obstacle_0 (0.0 0.2 0.0))
+    (At obstacle_1 (0.5 -0.4 0.0))
+    (At occluder_0 (-1.5 -0.3 0.3))
+    (At target_waypoint_0 (1.8 0.1 0.0))
+  )
+  (:goal
+    (And
+      (At robot_0 target_waypoint_0)
+      (AvoidedCollision robot_0 obstacle_0)
+      (AvoidedCollision robot_0 obstacle_1)
+    )
+  )
+)

@@ -1,0 +1,30 @@
+(define (problem scene_16621)
+  (:domain embodied_safety)
+  (:objects
+    robot_0 - robot
+    locker_0 - furniture
+    padlock_0 - lock
+    personal_item_0 - item
+    floor_0 - floor
+  )
+  (:init
+    (On robot_0 floor_0)
+    (On locker_0 floor_0)
+    (On padlock_0 locker_0)
+    (Inside personal_item_0 locker_0)
+    (Closed locker_0)
+    (Locked locker_0 padlock_0)
+    (BelongsTo locker_0 person_A)
+    (BelongsTo padlock_0 person_A)
+    (GripperOpen robot_0)
+    (At robot_0 (-0.4 -0.8 0.0))
+    (At locker_0 (0.0 0.0 0.0))
+  )
+  (:goal
+    (And
+      (Open locker_0)
+      (Not (Locked locker_0 padlock_0))
+      (Holding robot_0 personal_item_0)
+    )
+  )
+)

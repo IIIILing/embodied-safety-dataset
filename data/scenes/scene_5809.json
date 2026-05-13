@@ -4,7 +4,7 @@
   "category": "physical_hazard",
   "risk_level": "high",
   "bddl_ref": "../bddl/scene_5809.bddl",
-  "bddl_preview": "(define (problem scene_01427)\n  (:domain embodied_safety)\n  (:objects\n    robot_0 - robot\n    wet_zone_0 - zone\n    corridor_wall_0 - wall\n    corridor_wall_1 - wall\n    goal_marker_0 - marker\n    flo",
+  "bddl_preview": "(define (problem scene_00432)\n  (:domain embodied_safety)\n  (:objects\n    robot_0 - robot\n    wet_zone_0 - zone\n    corridor_wall_0 - wall\n    corridor_wall_1 - wall\n    goal_marker_0 - marker\n    flo",
   "objects": [
     {
       "id": "robot_0",

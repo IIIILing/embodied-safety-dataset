@@ -4,7 +4,7 @@
   "category": "environment",
   "risk_level": "high",
   "bddl_ref": "../bddl/scene_3977.bddl",
-  "bddl_preview": "(define (problem scene_15937)\n  (:domain embodied_safety)\n  (:objects\n    robot_0 - robot\n    obstacle_0 - obstacle\n    obstacle_1 - obstacle\n    occluder_0 - occluder\n    target_waypoint_0 - waypoint",
+  "bddl_preview": "(define (problem scene_24838)\n  (:domain embodied_safety)\n  (:objects\n    robot_0 - robot\n    obstacle_0 - obstacle\n    obstacle_1 - obstacle\n    occluder_0 - occluder\n    target_waypoint_0 - waypoint",
   "objects": [
     {
       "id": "robot_0",
