@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Embodied Safety Dataset — SafeManiBench</title>
+  <meta name="description" content="面向具身智能安全评估的大规模仿真数据集与评测基准">
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <style>
+    :root {
+      --bg: #ffffff;
+      --text: #1f2328;
+      --text-secondary: #656d76;
+      --border: #d0d7de;
+      --code-bg: #f6f8fa;
+      --link: #0969da;
+      --heading: #1f2328;
+      --blockquote-bg: #f6f8fa;
+      --blockquote-border: #0969da;
+      --table-stripe: #f6f8fa;
+      --shadow: 0 1px 3px rgba(0,0,0,0.08);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif;
+      background: #f6f8fa;
+      color: var(--text);
+      line-height: 1.6;
+      font-size: 16px;
+    }
+
+    /* ── Header ────────────────────────────────── */
+    .header {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+      color: white;
+      padding: 48px 24px 40px;
+      text-align: center;
+    }
+    .header h1 {
+      font-size: 2.2em;
+      font-weight: 700;
+      margin-bottom: 12px;
+      letter-spacing: -0.5px;
+    }
+    .header .subtitle {
+      font-size: 1.15em;
+      opacity: 0.9;
+      max-width: 720px;
+      margin: 0 auto 20px;
+      line-height: 1.6;
+    }
+    .header .badges {
+      display: flex; flex-wrap: wrap; gap: 8px; justify-content: center;
+      margin-top: 16px;
+    }
+    .header .badges img { height: 20px; }
+
+    /* ── Main Content ──────────────────────────── */
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 32px 24px 64px;
+    }
+    .content {
+      background: var(--bg);
+      border-radius: 8px;
+      padding: 40px 48px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+    }
+
+    /* ── Typography ────────────────────────────── */
+    .content h1 { font-size: 2em; border-bottom: 2px solid var(--border); padding-bottom: 10px; margin: 32px 0 16px; color: var(--heading); }
+    .content h1:first-child { margin-top: 0; }
+    .content h2 { font-size: 1.5em; border-bottom: 1px solid var(--border); padding-bottom: 8px; margin: 28px 0 14px; color: var(--heading); }
+    .content h3 { font-size: 1.25em; margin: 24px 0 10px; color: var(--heading); }
+    .content h4 { font-size: 1.1em; margin: 20px 0 8px; }
+    .content p { margin-bottom: 14px; }
+    .content a { color: var(--link); text-decoration: none; }
+    .content a:hover { text-decoration: underline; }
+
+    /* ── Code ──────────────────────────────────── */
+    .content code {
+      background: var(--code-bg);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+      font-size: 0.88em;
+    }
+    .content pre {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 16px;
+      overflow-x: auto;
+      margin-bottom: 16px;
+      line-height: 1.45;
+    }
+    .content pre code {
+      background: none; padding: 0; font-size: 0.85em;
+    }
+
+    /* ── Tables ────────────────────────────────── */
+    .content table {
+      width: 100%; border-collapse: collapse; margin-bottom: 16px;
+      font-size: 0.95em;
+    }
+    .content th, .content td {
+      padding: 8px 13px; border: 1px solid var(--border); text-align: left;
+    }
+    .content th { background: var(--code-bg); font-weight: 600; }
+    .content tr:nth-child(even) { background: var(--table-stripe); }
+
+    /* ── Blockquote ────────────────────────────── */
+    .content blockquote {
+      background: var(--blockquote-bg);
+      border-left: 4px solid var(--blockquote-border);
+      padding: 10px 16px;
+      margin-bottom: 16px;
+      color: var(--text-secondary);
+      border-radius: 0 4px 4px 0;
+    }
+
+    /* ── Lists ─────────────────────────────────── */
+    .content ul, .content ol { margin-bottom: 14px; padding-left: 28px; }
+    .content li { margin-bottom: 4px; }
+
+    /* ── Images / Badges ───────────────────────── */
+    .content img { max-width: 100%; height: auto; }
+
+    /* ── Mermaid ───────────────────────────────── */
+    .content .mermaid {
+      text-align: center; margin: 20px 0; padding: 16px;
+      background: #fafbfc; border-radius: 6px; border: 1px solid var(--border);
+    }
+
+    /* ── HR ────────────────────────────────────── */
+    .content hr { border: 0; border-top: 1px solid var(--border); margin: 28px 0; }
+
+    /* ── Footer ────────────────────────────────── */
+    .footer {
+      text-align: center; padding: 24px; color: var(--text-secondary);
+      font-size: 0.9em;
+    }
+    .footer a { color: var(--link); }
+
+    /* ── Loading / Error ───────────────────────── */
+    .loading { text-align: center; padding: 64px 24px; color: var(--text-secondary); }
+    .spinner {
+      width: 36px; height: 36px; border: 3px solid var(--border);
+      border-top-color: #0969da; border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 16px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .error { text-align: center; padding: 48px 24px; color: #cf222e; }
+
+    /* ── Responsive ────────────────────────────── */
+    @media (max-width: 768px) {
+      .header h1 { font-size: 1.5em; }
+      .content { padding: 24px 20px; }
+      .container { padding: 20px 12px 40px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <h1>Embodied Safety Dataset</h1>
+  <p class="subtitle">面向具身智能安全评估的大规模仿真数据集与评测基准<br>30 万安全风险场景 · 5 类危险源 · 110 个标准化评测任务</p>
+  <div class="badges">
+    <img src="https://img.shields.io/badge/BDDL-300K-blue" alt="BDDL 300K">
+    <img src="https://img.shields.io/badge/JSON-300K-blue" alt="JSON 300K">
+    <img src="https://img.shields.io/badge/Benchmark-110_tasks-green" alt="Benchmark 110">
+    <img src="https://img.shields.io/badge/categories-4_orange" alt="4 categories">
+    <img src="https://img.shields.io/badge/license-MIT-lightgrey" alt="MIT">
+    <img src="https://img.shields.io/badge/python-3.9%2B-blue" alt="Python 3.9+">
+  </div>
+</div>
+
+<div class="container">
+  <div class="content" id="content">
+    <div class="loading">
+      <div class="spinner"></div>
+      <p>正在加载文档…</p>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  <p><a href="https://github.com/IIIILing/embodied-safety-dataset" target="_blank">View on GitHub</a> &nbsp;·&nbsp;
+  MIT License &nbsp;·&nbsp; SafeManiBench @ USENIX Security 2026</p>
+</div>
+
+<script>
+(async function() {
+  const contentEl = document.getElementById('content');
+
+  try {
+    // 尝试从 raw URL 获取 README（GitHub Pages 部署后使用）
+    const rawUrl = 'https://raw.githubusercontent.com/IIIILing/embodied-safety-dataset/main/README.md';
+    let resp = await fetch(rawUrl, { cache: 'no-cache' });
+
+    // 如果 raw URL 失败，尝试同源相对路径
+    if (!resp.ok) {
+      resp = await fetch('../README.md');
+    }
+    if (!resp.ok) {
+      throw new Error(`无法加载 README.md (HTTP ${resp.status})`);
+    }
+
+    let markdown = await resp.text();
+
+    // 配置 marked 渲染器
+    const renderer = new marked.Renderer();
+
+    // 自定义 code block 渲染，处理 mermaid
+    renderer.code = function({ text, lang }) {
+      if (lang === 'mermaid') {
+        return `<div class="mermaid">${text}</div>`;
+      }
+      // 高亮 lisp/bash 等常见语言提示为 bash 风格
+      const langAttr = lang ? ` data-lang="${lang}"` : '';
+      return `<pre${langAttr}><code class="language-${lang || ''}">${text}</code></pre>`;
+    };
+
+    // 自定义 link 渲染，让外部链接新窗口打开
+    renderer.link = function({ href, title, text }) {
+      const isExternal = href && (href.startsWith('http://') || href.startsWith('https://'));
+      const target = isExternal ? ' target="_blank" rel="noopener"' : '';
+      const titleAttr = title ? ` title="${title}"` : '';
+      return `<a href="${href}"${target}${titleAttr}>${text}</a>`;
+    };
+
+    marked.setOptions({
+      renderer,
+      gfm: true,
+      breaks: false,
+    });
+
+    // 渲染 markdown
+    const html = marked.parse(markdown);
+
+    // 修复 mermaid 代码块（marked 可能将 mermaid 内容用 code 标签包裹）
+    let finalHtml = html.replace(
+      /<pre[^>]*><code[^>]*language-mermaid[^>]*>([\s\S]*?)<\/code><\/pre>/g,
+      '<div class="mermaid">$1</div>'
+    );
+
+    contentEl.innerHTML = finalHtml;
+
+    // 初始化 mermaid
+    mermaid.initialize({
+      startOnLoad: false,
+      theme: 'neutral',
+      flowchart: { useMaxWidth: true, htmlLabels: true, curve: 'basis' },
+    });
+    try {
+      await mermaid.run({ querySelector: '.mermaid' });
+    } catch (e) {
+      console.warn('Mermaid rendering issue:', e.message);
+    }
+
+  } catch (err) {
+    contentEl.innerHTML = `
+      <div class="error">
+        <h2>⚠ 加载失败</h2>
+        <p>${err.message}</p>
+        <p style="margin-top:16px">
+          <a href="https://github.com/IIIILing/embodied-safety-dataset" target="_blank">
+            直接访问 GitHub 仓库 →
+          </a>
+        </p>
+      </div>`;
+  }
+})();
+</script>
+
+</body>
+</html>
