@@ -40,7 +40,7 @@ BDDL (Behavior Domain Definition Language) 使用 Lisp-like 语法，核心结�
 python3 generate_scenario.py \
   --instruction "输入指令" \
   --category "malicious" \      # 可选，自动检测
-  --use-api                     # 使用 DeepSeek API
+  --use-api                     # 使用 API
 ```
 
 输出：`data/scenes/<scene_id>.json`

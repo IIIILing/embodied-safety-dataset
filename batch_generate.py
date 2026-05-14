@@ -50,14 +50,14 @@ def main():
                         help="仅生成 BDDL 文件")
     args = parser.parse_args()
 
-    api_key = args.api_key or os.environ.get("DEEPSEEK_API_KEY")
+    api_key = args.api_key or os.environ.get("API_KEY")
 
     instructions = load_instructions(args.input)
     if args.limit:
         instructions = instructions[:args.limit]
 
     print(f"指令: {len(instructions)} 条")
-    print(f"模式: {'API (DeepSeek)' if args.use_api else '模板匹配'}")
+    print(f"模式: {'API' if args.use_api else '模板匹配'}")
     print(f"BDDL 输出: {args.output_bddl}")
     print(f"JSON 输出: {args.output_scene}\n")
 

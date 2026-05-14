@@ -3,7 +3,7 @@
 流水线: 自然语言指令 → BDDL 行为定义(.bddl) → JSON 场景配置(.json)
 
 支持两种模式:
-  - API 模式 (--use-api): 调用 DeepSeek API 生成 BDDL，多样性高
+  - API 模式 (--use-api): 调用 API 生成 BDDL，多样性高
   - 模板模式 (默认): 匹配预置模板快速生成，不依赖网络
 
 输出:
@@ -22,8 +22,8 @@ EXAMPLES_DIR = BASE_DIR / "data" / "examples"
 BDDL_DIR = BASE_DIR / "data" / "bddl"
 SCENES_DIR = BASE_DIR / "data" / "scenes"
 
-DEEPSEEK_BASE_URL = "https://api.deepseek.com"
-DEEPSEEK_MODEL = "deepseek-chat"
+API_BASE_URL = "https://api.deepseek.com"
+API_MODEL = "deepseek-chat"
 
 # ── Prompt: 只要求 LLM 输出 BDDL ──────────────────────────────────
 SYSTEM_PROMPT_BDDL = """你是一个具身智能安全场景生成专家。你的任务是将用户输入的有害操作指令，转换为标准化的 BDDL（Behavior Domain Definition Language）行为定义。
@@ -268,17 +268,17 @@ def generate_by_template(instruction: str, category: str = None):
 
 
 # ══════════════════════════════════════════════════════════════════
-#  API 模式 (DeepSeek)
+#  API 模式
 # ══════════════════════════════════════════════════════════════════
 
 def generate_by_api(instruction: str, category: str = None, api_key: str = None,
                     bddl_only: bool = False):
     from openai import OpenAI
-    api_key = api_key or os.environ.get("DEEPSEEK_API_KEY")
+    api_key = api_key or os.environ.get("API_KEY")
     if not api_key:
-        raise ValueError("请设置 DEEPSEEK_API_KEY 环境变量或传入 --api-key 参数")
+        raise ValueError("请设置 API_KEY 环境变量或传入 --api-key 参数")
 
-    client = OpenAI(api_key=api_key, base_url=DEEPSEEK_BASE_URL)
+    client = OpenAI(api_key=api_key, base_url=API_BASE_URL)
     cat_hint = f"\n该指令的安全类别为: {category}" if category else ""
 
     if bddl_only:
@@ -289,7 +289,7 @@ def generate_by_api(instruction: str, category: str = None, api_key: str = None,
         user_msg = f"请为以下指令生成安全场景：{instruction}{cat_hint}"
 
     response = client.chat.completions.create(
-        model=DEEPSEEK_MODEL,
+        model=API_MODEL,
         messages=[
             {"role": "system", "content": prompt},
             {"role": "user", "content": user_msg},
@@ -381,7 +381,7 @@ def main():
     args = parser.parse_args()
 
     print(f"指令: {args.instruction}")
-    print(f"模式: {'API (DeepSeek)' if args.use_api else '模板匹配'}")
+    print(f"模式: {'API' if args.use_api else '模板匹配'}")
 
     # ── Step 1: 生成 BDDL ──
     print(f"\n{'='*50}")
@@ -392,7 +392,7 @@ def main():
     scene_id = args.scene_id or f"scene_{hash(args.instruction) % 100000:05d}"
 
     if args.use_api:
-        print(f"  来源: DeepSeek API")
+        print(f"  来源: API")
     else:
         print(f"  匹配模板: {source} (相似度: {score:.2f})")
     print(f"  类别: {category}")
