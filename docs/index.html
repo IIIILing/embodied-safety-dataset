@@ -1,268 +1,532 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-CN" data-theme="light">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Embodied Safety Dataset — SafeManiBench</title>
+  <title>SafeManiBench — Embodied Safety Dataset</title>
   <meta name="description" content="面向具身智能安全评估的大规模仿真数据集与评测基准">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡</text></svg>">
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/github.min.css" id="hljs-light">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/github-dark.min.css" id="hljs-dark" disabled>
+  <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"></script>
   <style>
+    /* ═══════════════════════════════════════════════════════════════
+       Material-inspired Design System
+       ═══════════════════════════════════════════════════════════ */
     :root {
-      --bg: #ffffff;
-      --text: #1f2328;
-      --text-secondary: #656d76;
-      --border: #d0d7de;
-      --code-bg: #f6f8fa;
-      --link: #0969da;
-      --heading: #1f2328;
-      --blockquote-bg: #f6f8fa;
-      --blockquote-border: #0969da;
-      --table-stripe: #f6f8fa;
-      --shadow: 0 1px 3px rgba(0,0,0,0.08);
+      --md-primary: #4051b5;
+      --md-primary-dark: #303f9f;
+      --md-primary-light: #7986cb;
+      --md-accent: #526cfe;
+      --md-bg: #fafafa;
+      --md-surface: #ffffff;
+      --md-surface-variant: #f5f5f5;
+      --md-text: #212121;
+      --md-text-secondary: #616161;
+      --md-text-muted: #9e9e9e;
+      --md-border: #e0e0e0;
+      --md-shadow-1: 0 1px 2px rgba(0,0,0,0.08), 0 1px 3px rgba(0,0,0,0.06);
+      --md-shadow-2: 0 2px 4px rgba(0,0,0,0.10), 0 1px 5px rgba(0,0,0,0.06);
+      --md-shadow-3: 0 4px 8px rgba(0,0,0,0.12), 0 2px 4px rgba(0,0,0,0.08);
+      --md-code-bg: #f5f5f5;
+      --md-code-text: #212121;
+      --md-table-header: #f5f5f5;
+      --md-table-stripe: #fafafa;
+      --md-admonition-note: #e3f2fd;
+      --md-admonition-warn: #fff3e0;
+      --md-admonition-danger: #ffebee;
+      --md-admonition-info: #e8f5e9;
+      --md-nav-active: #e8eaf6;
+      --md-overlay: rgba(0,0,0,0.32);
+      --md-scrollbar: #bdbdbd;
+      --md-scrollbar-hover: #9e9e9e;
+      --sidebar-width: 260px;
+      --header-height: 64px;
+    }
+
+    [data-theme="dark"] {
+      --md-bg: #12121a;
+      --md-surface: #1e1e2e;
+      --md-surface-variant: #252536;
+      --md-text: #e0e0e0;
+      --md-text-secondary: #b0b0b0;
+      --md-text-muted: #757575;
+      --md-border: #333348;
+      --md-shadow-1: 0 1px 2px rgba(0,0,0,0.24), 0 1px 3px rgba(0,0,0,0.18);
+      --md-shadow-2: 0 2px 4px rgba(0,0,0,0.30), 0 1px 5px rgba(0,0,0,0.18);
+      --md-shadow-3: 0 4px 8px rgba(0,0,0,0.36), 0 2px 4px rgba(0,0,0,0.24);
+      --md-code-bg: #252536;
+      --md-code-text: #e0e0e0;
+      --md-table-header: #252536;
+      --md-table-stripe: #1e1e2e0;
+      --md-admonition-note: #1a237e30;
+      --md-admonition-warn: #e6510030;
+      --md-admonition-danger: #b71c1c30;
+      --md-admonition-info: #1b5e2030;
+      --md-nav-active: #303f9f40;
+      --md-overlay: rgba(0,0,0,0.56);
+      --md-scrollbar: #555;
+      --md-scrollbar-hover: #777;
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
+    html { scroll-behavior: smooth; scroll-padding-top: calc(var(--header-height) + 24px); }
+
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif;
-      background: #f6f8fa;
-      color: var(--text);
-      line-height: 1.6;
-      font-size: 16px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+      background: var(--md-bg);
+      color: var(--md-text);
+      line-height: 1.7;
+      font-size: 15px;
+      transition: background 0.3s, color 0.3s;
+      overflow-x: hidden;
     }
 
-    /* ── Header ────────────────────────────────── */
+    /* ── Scrollbar ─────────────────────────────── */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--md-scrollbar); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--md-scrollbar-hover); }
+
+    /* ═══════════════════════════════════════════════════════════════
+       HEADER
+       ═══════════════════════════════════════════════════════════ */
     .header {
-      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-      color: white;
-      padding: 48px 24px 40px;
-      text-align: center;
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      height: var(--header-height);
+      background: var(--md-primary);
+      color: #fff;
+      display: flex; align-items: center; gap: 16px;
+      padding: 0 24px;
+      box-shadow: var(--md-shadow-3);
+      transition: background 0.3s;
     }
-    .header h1 {
-      font-size: 2.2em;
-      font-weight: 700;
-      margin-bottom: 12px;
-      letter-spacing: -0.5px;
+    .header .menu-btn {
+      display: none; background: none; border: none; color: #fff; font-size: 24px;
+      cursor: pointer; padding: 4px; line-height: 1; width: 36px; height: 36px;
+      align-items: center; justify-content: center; border-radius: 4px;
     }
-    .header .subtitle {
-      font-size: 1.15em;
-      opacity: 0.9;
-      max-width: 720px;
-      margin: 0 auto 20px;
-      line-height: 1.6;
+    .header .menu-btn:hover { background: rgba(255,255,255,0.12); }
+    .header .logo {
+      font-size: 1.15em; font-weight: 700; white-space: nowrap;
+      letter-spacing: -0.3px; user-select: none;
+      display: flex; align-items: center; gap: 8px;
     }
-    .header .badges {
-      display: flex; flex-wrap: wrap; gap: 8px; justify-content: center;
-      margin-top: 16px;
-    }
-    .header .badges img { height: 20px; }
+    .header .logo .icon { font-size: 1.4em; }
+    .header .header-right { margin-left: auto; display: flex; align-items: center; gap: 8px; }
 
-    /* ── Main Content ──────────────────────────── */
-    .container {
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 32px 24px 64px;
+    /* Theme toggle */
+    .theme-toggle {
+      background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2);
+      color: #fff; width: 38px; height: 38px; border-radius: 8px; cursor: pointer;
+      font-size: 18px; display: flex; align-items: center; justify-content: center;
+      transition: background 0.2s;
+    }
+    .theme-toggle:hover { background: rgba(255,255,255,0.2); }
+
+    /* GitHub link */
+    .gh-link {
+      color: #fff; text-decoration: none; font-size: 14px; font-weight: 500;
+      padding: 6px 14px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.25);
+      transition: background 0.2s; white-space: nowrap;
+    }
+    .gh-link:hover { background: rgba(255,255,255,0.12); }
+
+    /* ═══════════════════════════════════════════════════════════════
+       SIDEBAR
+       ═══════════════════════════════════════════════════════════════ */
+    .sidebar {
+      position: fixed; top: var(--header-height); left: 0; bottom: 0;
+      width: var(--sidebar-width);
+      background: var(--md-surface);
+      border-right: 1px solid var(--md-border);
+      overflow-y: auto; overflow-x: hidden;
+      z-index: 90;
+      padding: 16px 0 32px;
+      transition: transform 0.3s cubic-bezier(0.4,0,0.2,1), background 0.3s;
+      box-shadow: var(--md-shadow-1);
+    }
+    .sidebar .nav-title {
+      font-size: 0.7em; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.08em; color: var(--md-text-muted);
+      padding: 8px 20px; margin-top: 4px; user-select: none;
+    }
+    .sidebar nav { padding: 0 8px; }
+    .sidebar nav a {
+      display: block; padding: 7px 12px; margin: 1px 0;
+      color: var(--md-text-secondary); text-decoration: none;
+      font-size: 0.88em; border-radius: 6px;
+      transition: all 0.15s; line-height: 1.4;
+    }
+    .sidebar nav a:hover { background: var(--md-surface-variant); color: var(--md-text); }
+    .sidebar nav a.active {
+      background: var(--md-nav-active); color: var(--md-primary);
+      font-weight: 500;
+    }
+    .sidebar nav a.l2 { padding-left: 28px; font-size: 0.83em; }
+    .sidebar nav a.l3 { padding-left: 42px; font-size: 0.8em; }
+    .sidebar-overlay {
+      display: none; position: fixed; inset: 0; z-index: 85;
+      background: var(--md-overlay);
+    }
+
+    /* ═══════════════════════════════════════════════════════════════
+       MAIN CONTENT
+       ═══════════════════════════════════════════════════════════════ */
+    .main {
+      margin-left: var(--sidebar-width);
+      margin-top: var(--header-height);
+      padding: 40px 48px 80px;
+      max-width: 960px;
     }
     .content {
-      background: var(--bg);
-      border-radius: 8px;
-      padding: 40px 48px;
-      box-shadow: var(--shadow);
-      border: 1px solid var(--border);
+      background: var(--md-surface);
+      border-radius: 12px;
+      padding: 48px 56px;
+      box-shadow: var(--md-shadow-2);
+      border: 1px solid var(--md-border);
+      transition: background 0.3s, border 0.3s;
     }
 
+    /* ── Loading ───────────────────────────────── */
+    .loading { text-align: center; padding: 80px 24px; color: var(--md-text-secondary); }
+    .spinner {
+      width: 40px; height: 40px; border: 3px solid var(--md-border);
+      border-top-color: var(--md-primary); border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      margin: 0 auto 20px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .error { text-align: center; padding: 64px 24px; color: #e53935; }
+    .error h2 { margin-bottom: 12px; }
+
     /* ── Typography ────────────────────────────── */
-    .content h1 { font-size: 2em; border-bottom: 2px solid var(--border); padding-bottom: 10px; margin: 32px 0 16px; color: var(--heading); }
-    .content h1:first-child { margin-top: 0; }
-    .content h2 { font-size: 1.5em; border-bottom: 1px solid var(--border); padding-bottom: 8px; margin: 28px 0 14px; color: var(--heading); }
-    .content h3 { font-size: 1.25em; margin: 24px 0 10px; color: var(--heading); }
-    .content h4 { font-size: 1.1em; margin: 20px 0 8px; }
+    .content h1 { font-size: 2em; font-weight: 700; color: var(--md-text); margin: 40px 0 16px; letter-spacing: -0.5px; }
+    .content h1:first-of-type { margin-top: 0; }
+    .content h2 { font-size: 1.45em; font-weight: 600; color: var(--md-text); margin: 36px 0 14px; padding-bottom: 8px; border-bottom: 1px solid var(--md-border); }
+    .content h3 { font-size: 1.2em; font-weight: 600; color: var(--md-text); margin: 28px 0 10px; }
+    .content h4 { font-size: 1.05em; font-weight: 600; margin: 20px 0 8px; }
     .content p { margin-bottom: 14px; }
-    .content a { color: var(--link); text-decoration: none; }
-    .content a:hover { text-decoration: underline; }
+    .content a { color: var(--md-primary); text-decoration: none; font-weight: 500; }
+    .content a:hover { text-decoration: underline; color: var(--md-primary-dark); }
 
     /* ── Code ──────────────────────────────────── */
     .content code {
-      background: var(--code-bg);
-      padding: 2px 6px;
-      border-radius: 4px;
-      font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
-      font-size: 0.88em;
+      background: var(--md-code-bg); color: #e53935;
+      padding: 2px 6px; border-radius: 4px; font-size: 0.88em;
+      font-family: "JetBrains Mono", "SFMono-Regular", "Fira Code", Consolas, monospace;
     }
     .content pre {
-      background: var(--code-bg);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 16px;
-      overflow-x: auto;
-      margin-bottom: 16px;
-      line-height: 1.45;
+      background: var(--md-code-bg); border: 1px solid var(--md-border);
+      border-radius: 8px; padding: 16px 20px; overflow-x: auto;
+      margin: 20px 0; line-height: 1.55;
+      box-shadow: var(--md-shadow-1);
     }
     .content pre code {
-      background: none; padding: 0; font-size: 0.85em;
+      background: none; color: var(--md-code-text); padding: 0; font-size: 0.84em;
+      font-weight: 400;
     }
 
     /* ── Tables ────────────────────────────────── */
     .content table {
-      width: 100%; border-collapse: collapse; margin-bottom: 16px;
-      font-size: 0.95em;
+      width: 100%; border-collapse: collapse; margin: 20px 0;
+      font-size: 0.92em; border-radius: 8px; overflow: hidden;
+      box-shadow: var(--md-shadow-1);
     }
     .content th, .content td {
-      padding: 8px 13px; border: 1px solid var(--border); text-align: left;
+      padding: 10px 16px; border: 1px solid var(--md-border); text-align: left;
     }
-    .content th { background: var(--code-bg); font-weight: 600; }
-    .content tr:nth-child(even) { background: var(--table-stripe); }
+    .content th {
+      background: var(--md-table-header); font-weight: 600; font-size: 0.9em;
+      text-transform: uppercase; letter-spacing: 0.03em; color: var(--md-text-secondary);
+    }
+    .content tr:nth-child(even) { background: var(--md-table-stripe); }
+    .content tr:hover { background: var(--md-surface-variant); }
 
-    /* ── Blockquote ────────────────────────────── */
+    /* ── Blockquote (Admonition-style) ─────────── */
     .content blockquote {
-      background: var(--blockquote-bg);
-      border-left: 4px solid var(--blockquote-border);
-      padding: 10px 16px;
-      margin-bottom: 16px;
-      color: var(--text-secondary);
-      border-radius: 0 4px 4px 0;
+      background: linear-gradient(135deg, #e8eaf6, #e3f2fd);
+      border-left: 4px solid var(--md-primary);
+      padding: 14px 20px; margin: 20px 0; border-radius: 0 8px 8px 0;
+      color: var(--md-text-secondary); font-size: 0.95em;
+    }
+    [data-theme="dark"] .content blockquote {
+      background: linear-gradient(135deg, #1a237e20, #0d47a120);
     }
 
     /* ── Lists ─────────────────────────────────── */
-    .content ul, .content ol { margin-bottom: 14px; padding-left: 28px; }
-    .content li { margin-bottom: 4px; }
+    .content ul, .content ol { margin-bottom: 14px; padding-left: 26px; }
+    .content li { margin-bottom: 5px; }
+    .content ul { list-style-type: none; }
+    .content ul li::before {
+      content: "›"; color: var(--md-primary); font-weight: 700;
+      display: inline-block; width: 1em; margin-left: -1em;
+    }
 
-    /* ── Images / Badges ───────────────────────── */
-    .content img { max-width: 100%; height: auto; }
+    /* ── Images ────────────────────────────────── */
+    .content img { max-width: 100%; height: auto; border-radius: 4px; }
+    .content p img { display: inline-block; vertical-align: middle; }
 
     /* ── Mermaid ───────────────────────────────── */
     .content .mermaid {
-      text-align: center; margin: 20px 0; padding: 16px;
-      background: #fafbfc; border-radius: 6px; border: 1px solid var(--border);
+      text-align: center; margin: 24px 0; padding: 20px;
+      background: var(--md-surface-variant); border-radius: 8px;
+      border: 1px solid var(--md-border); overflow-x: auto;
     }
 
     /* ── HR ────────────────────────────────────── */
-    .content hr { border: 0; border-top: 1px solid var(--border); margin: 28px 0; }
+    .content hr { border: 0; border-top: 1px solid var(--md-border); margin: 36px 0; }
 
-    /* ── Footer ────────────────────────────────── */
+    /* ── Keyboard ──────────────────────────────── */
+    .content kbd {
+      display: inline-block; padding: 2px 6px; font-size: 0.82em;
+      font-family: inherit; background: var(--md-surface-variant);
+      border: 1px solid var(--md-border); border-radius: 4px;
+      box-shadow: 0 1px 0 var(--md-border);
+    }
+
+    /* ═══════════════════════════════════════════════════════════════
+       BACK TO TOP
+       ═══════════════════════════════════════════════════════════════ */
+    .back-to-top {
+      position: fixed; bottom: 32px; right: 32px; z-index: 50;
+      width: 44px; height: 44px; border-radius: 50%;
+      background: var(--md-primary); color: #fff; border: none;
+      cursor: pointer; font-size: 20px;
+      box-shadow: var(--md-shadow-3);
+      opacity: 0; transform: translateY(12px);
+      transition: all 0.25s cubic-bezier(0.4,0,0.2,1);
+      pointer-events: none;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .back-to-top.visible {
+      opacity: 1; transform: translateY(0); pointer-events: auto;
+    }
+    .back-to-top:hover { background: var(--md-primary-dark); transform: translateY(-2px); }
+
+    /* ═══════════════════════════════════════════════════════════════
+       PROGRESS BAR
+       ═══════════════════════════════════════════════════════════════ */
+    .progress-bar {
+      position: fixed; top: var(--header-height); left: 0; height: 3px;
+      background: var(--md-accent); z-index: 101;
+      width: 0%; transition: width 0.1s linear;
+      box-shadow: 0 0 6px var(--md-accent);
+    }
+
+    /* ═══════════════════════════════════════════════════════════════
+       FOOTER
+       ═══════════════════════════════════════════════════════════════ */
     .footer {
-      text-align: center; padding: 24px; color: var(--text-secondary);
-      font-size: 0.9em;
+      margin-left: var(--sidebar-width); padding: 32px 48px;
+      text-align: center; color: var(--md-text-muted); font-size: 0.88em;
+      border-top: 1px solid var(--md-border);
     }
-    .footer a { color: var(--link); }
+    .footer a { color: var(--md-primary); text-decoration: none; }
+    .footer a:hover { text-decoration: underline; }
 
-    /* ── Loading / Error ───────────────────────── */
-    .loading { text-align: center; padding: 64px 24px; color: var(--text-secondary); }
-    .spinner {
-      width: 36px; height: 36px; border: 3px solid var(--border);
-      border-top-color: #0969da; border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-      margin: 0 auto 16px;
+    /* ═══════════════════════════════════════════════════════════════
+       MOBILE
+       ═══════════════════════════════════════════════════════════════ */
+    @media (max-width: 1024px) {
+      .sidebar { transform: translateX(-100%); }
+      .sidebar.open { transform: translateX(0); }
+      .sidebar-overlay.show { display: block; }
+      .header .menu-btn { display: flex; }
+      .main { margin-left: 0; padding: 24px 16px 48px; }
+      .content { padding: 28px 22px; border-radius: 10px; }
+      .footer { margin-left: 0; padding: 24px 16px; }
     }
-    @keyframes spin { to { transform: rotate(360deg); } }
-    .error { text-align: center; padding: 48px 24px; color: #cf222e; }
-
-    /* ── Responsive ────────────────────────────── */
-    @media (max-width: 768px) {
-      .header h1 { font-size: 1.5em; }
-      .content { padding: 24px 20px; }
-      .container { padding: 20px 12px 40px; }
+    @media (max-width: 480px) {
+      .header .logo { font-size: 0.95em; }
+      .gh-link { font-size: 12px; padding: 5px 10px; }
+      .main { padding: 16px 8px 40px; }
+      .content { padding: 20px 14px; }
     }
   </style>
 </head>
 <body>
 
-<div class="header">
-  <h1>Embodied Safety Dataset</h1>
-  <p class="subtitle">面向具身智能安全评估的大规模仿真数据集与评测基准<br>30 万安全风险场景 · 5 类危险源 · 110 个标准化评测任务</p>
-  <div class="badges">
-    <img src="https://img.shields.io/badge/BDDL-300K-blue" alt="BDDL 300K">
-    <img src="https://img.shields.io/badge/JSON-300K-blue" alt="JSON 300K">
-    <img src="https://img.shields.io/badge/Benchmark-110_tasks-green" alt="Benchmark 110">
-    <img src="https://img.shields.io/badge/categories-4_orange" alt="4 categories">
-    <img src="https://img.shields.io/badge/license-MIT-lightgrey" alt="MIT">
-    <img src="https://img.shields.io/badge/python-3.9%2B-blue" alt="Python 3.9+">
-  </div>
-</div>
+<!-- Progress Bar -->
+<div class="progress-bar" id="progressBar"></div>
 
-<div class="container">
+<!-- Header -->
+<header class="header">
+  <button class="menu-btn" id="menuBtn" aria-label="Toggle navigation">☰</button>
+  <div class="logo">
+    <span class="icon">🛡</span> SafeManiBench
+  </div>
+  <div class="header-right">
+    <a href="https://github.com/IIIILing/embodied-safety-dataset" class="gh-link" target="_blank" rel="noopener">
+      ⬡ GitHub
+    </a>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode" title="切换深色/浅色模式">☀</button>
+  </div>
+</header>
+
+<!-- Sidebar -->
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+<aside class="sidebar" id="sidebar">
+  <div class="nav-title">目录</div>
+  <nav id="sidebarNav"></nav>
+</aside>
+
+<!-- Main Content -->
+<main class="main">
   <div class="content" id="content">
     <div class="loading">
       <div class="spinner"></div>
       <p>正在加载文档…</p>
     </div>
   </div>
-</div>
+</main>
 
-<div class="footer">
-  <p><a href="https://github.com/IIIILing/embodied-safety-dataset" target="_blank">View on GitHub</a> &nbsp;·&nbsp;
-  MIT License &nbsp;·&nbsp; SafeManiBench @ USENIX Security 2026</p>
-</div>
+<footer class="footer" id="footer">
+  <p>
+    <a href="https://github.com/IIIILing/embodied-safety-dataset" target="_blank" rel="noopener">GitHub</a>
+    &nbsp;·&nbsp; MIT License &nbsp;·&nbsp; SafeManiBench @ USENIX Security 2026
+  </p>
+</footer>
+
+<!-- Back to Top -->
+<button class="back-to-top" id="backToTop" aria-label="Back to top" title="回到顶部">↑</button>
 
 <script>
+/* ═════════════════════════════════════════════════════════════════
+   CORE LOGIC
+   ═══════════════════════════════════════════════════════════════ */
 (async function() {
   const contentEl = document.getElementById('content');
+  const sidebarNav = document.getElementById('sidebarNav');
+  const progressBar = document.getElementById('progressBar');
+  const backToTop = document.getElementById('backToTop');
+  const menuBtn = document.getElementById('menuBtn');
+  const sidebar = document.getElementById('sidebar');
+  const sidebarOverlay = document.getElementById('sidebarOverlay');
+  const themeToggle = document.getElementById('themeToggle');
+  const hljsLight = document.getElementById('hljs-light');
+  const hljsDark = document.getElementById('hljs-dark');
+  const footer = document.getElementById('footer');
 
+  // ── Theme ─────────────────────────────────────
+  const savedTheme = localStorage.getItem('md-theme') || 'light';
+  document.documentElement.setAttribute('data-theme', savedTheme);
+  updateThemeUI(savedTheme);
+
+  themeToggle.addEventListener('click', () => {
+    const current = document.documentElement.getAttribute('data-theme');
+    const next = current === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    localStorage.setItem('md-theme', next);
+    updateThemeUI(next);
+    // Re-highlight code blocks
+    document.querySelectorAll('.content pre code').forEach(el => hljs.highlightElement(el));
+  });
+
+  function updateThemeUI(theme) {
+    themeToggle.textContent = theme === 'dark' ? '☾' : '☀';
+    if (hljsLight) hljsLight.disabled = theme === 'dark';
+    if (hljsDark) hljsDark.disabled = theme !== 'dark';
+  }
+
+  // ── Load README ───────────────────────────────
   try {
-    // 尝试从 raw URL 获取 README（GitHub Pages 部署后使用）
     const rawUrl = 'https://raw.githubusercontent.com/IIIILing/embodied-safety-dataset/main/README.md';
     let resp = await fetch(rawUrl, { cache: 'no-cache' });
+    if (!resp.ok) resp = await fetch('../README.md');
+    if (!resp.ok) throw new Error(`无法加载 README.md (HTTP ${resp.status})`);
 
-    // 如果 raw URL 失败，尝试同源相对路径
-    if (!resp.ok) {
-      resp = await fetch('../README.md');
-    }
-    if (!resp.ok) {
-      throw new Error(`无法加载 README.md (HTTP ${resp.status})`);
-    }
+    const markdown = await resp.text();
 
-    let markdown = await resp.text();
-
-    // 配置 marked 渲染器
+    // ── Marked renderer ─────────────────────────
     const renderer = new marked.Renderer();
 
-    // 自定义 code block 渲染，处理 mermaid
     renderer.code = function({ text, lang }) {
-      if (lang === 'mermaid') {
-        return `<div class="mermaid">${text}</div>`;
-      }
-      // 高亮 lisp/bash 等常见语言提示为 bash 风格
-      const langAttr = lang ? ` data-lang="${lang}"` : '';
-      return `<pre${langAttr}><code class="language-${lang || ''}">${text}</code></pre>`;
+      if (lang === 'mermaid') return `<div class="mermaid">${text}</div>`;
+      const langClass = lang ? ` language-${lang}` : '';
+      return `<pre><code class="${langClass}">${escapeHTML(text)}</code></pre>`;
     };
 
-    // 自定义 link 渲染，让外部链接新窗口打开
     renderer.link = function({ href, title, text }) {
-      const isExternal = href && (href.startsWith('http://') || href.startsWith('https://'));
-      const target = isExternal ? ' target="_blank" rel="noopener"' : '';
+      const isExt = href && /^https?:/.test(href);
+      const target = isExt ? ' target="_blank" rel="noopener"' : '';
       const titleAttr = title ? ` title="${title}"` : '';
       return `<a href="${href}"${target}${titleAttr}>${text}</a>`;
     };
 
-    marked.setOptions({
-      renderer,
-      gfm: true,
-      breaks: false,
-    });
+    renderer.heading = function({ text, depth }) {
+      const id = slugify(text);
+      return `<h${depth} id="${id}">${text}</h${depth}>`;
+    };
 
-    // 渲染 markdown
-    const html = marked.parse(markdown);
+    marked.setOptions({ renderer, gfm: true, breaks: false });
+    let html = marked.parse(markdown);
 
-    // 修复 mermaid 代码块（marked 可能将 mermaid 内容用 code 标签包裹）
-    let finalHtml = html.replace(
+    // Fix mermaid wrapped in code tags
+    html = html.replace(
       /<pre[^>]*><code[^>]*language-mermaid[^>]*>([\s\S]*?)<\/code><\/pre>/g,
       '<div class="mermaid">$1</div>'
     );
 
-    contentEl.innerHTML = finalHtml;
+    // Insert title/badges header into first h1
+    const titleHTML = `
+      <div style="text-align:center;margin-bottom:28px;">
+        <p style="font-size:1.1em;color:var(--md-text-secondary);max-width:640px;margin:0 auto 18px;line-height:1.7;">
+          面向具身智能安全评估的大规模仿真数据集与评测基准<br>
+          30 万安全风险场景 · 5 类危险源 · 110 个标准化评测任务
+        </p>
+        <p style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;">
+          <img src="https://img.shields.io/badge/BDDL-300K-blue">
+          <img src="https://img.shields.io/badge/JSON-300K-blue">
+          <img src="https://img.shields.io/badge/Benchmark-110_tasks-green">
+          <img src="https://img.shields.io/badge/categories-4_orange">
+          <img src="https://img.shields.io/badge/license-MIT-lightgrey">
+          <img src="https://img.shields.io/badge/python-3.9%2B-blue">
+        </p>
+      </div>`;
 
-    // 初始化 mermaid
+    html = html.replace(/<h1[^>]*>([\s\S]*?)<\/h1>/, (match) => match + titleHTML);
+
+    contentEl.innerHTML = html;
+
+    // ── Syntax Highlighting ─────────────────────
+    document.querySelectorAll('.content pre code').forEach(el => hljs.highlightElement(el));
+
+    // ── Mermaid ─────────────────────────────────
     mermaid.initialize({
       startOnLoad: false,
-      theme: 'neutral',
+      theme: document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'neutral',
       flowchart: { useMaxWidth: true, htmlLabels: true, curve: 'basis' },
     });
-    try {
-      await mermaid.run({ querySelector: '.mermaid' });
-    } catch (e) {
-      console.warn('Mermaid rendering issue:', e.message);
+    try { await mermaid.run({ querySelector: '.mermaid' }); } catch(e) { console.warn('Mermaid:', e.message); }
+
+    // ── Build Sidebar Nav ───────────────────────
+    buildSidebar();
+
+    // ── Scroll handlers ─────────────────────────
+    window.addEventListener('scroll', onScroll, { passive: true });
+
+    // ── Back to top ─────────────────────────────
+    backToTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+    // ── Mobile sidebar toggle ───────────────────
+    function closeSidebar() {
+      sidebar.classList.remove('open');
+      sidebarOverlay.classList.remove('show');
+      menuBtn.textContent = '☰';
     }
+    menuBtn.addEventListener('click', () => {
+      const isOpen = sidebar.classList.toggle('open');
+      sidebarOverlay.classList.toggle('show');
+      menuBtn.textContent = isOpen ? '✕' : '☰';
+    });
+    sidebarOverlay.addEventListener('click', closeSidebar);
+    sidebarNav.addEventListener('click', (e) => {
+      if (e.target.tagName === 'A' && window.innerWidth <= 1024) closeSidebar();
+    });
 
   } catch (err) {
     contentEl.innerHTML = `
@@ -270,12 +534,60 @@
         <h2>⚠ 加载失败</h2>
         <p>${err.message}</p>
         <p style="margin-top:16px">
-          <a href="https://github.com/IIIILing/embodied-safety-dataset" target="_blank">
+          <a href="https://github.com/IIIILing/embodied-safety-dataset" target="_blank" rel="noopener">
             直接访问 GitHub 仓库 →
           </a>
         </p>
       </div>`;
   }
+
+  // ── Helpers ───────────────────────────────────
+  function slugify(text) {
+    return text.toLowerCase().replace(/<[^>]*>/g, '').replace(/[^\w\u4e00-\u9fff]+/g, '-').replace(/^-|-$/g, '');
+  }
+
+  function escapeHTML(str) {
+    return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  function buildSidebar() {
+    const headings = contentEl.querySelectorAll('h1, h2, h3');
+    let html = '';
+    headings.forEach((h, i) => {
+      // Ensure heading has an id
+      if (!h.id) h.id = slugify(h.textContent) + '-' + i;
+      const level = parseInt(h.tagName[1]);
+      const cls = level === 2 ? 'l2' : level === 3 ? 'l3' : '';
+      html += `<a href="#${h.id}" class="${cls}">${h.textContent}</a>`;
+    });
+    sidebarNav.innerHTML = html || '<span style="padding:12px;color:var(--md-text-muted);font-size:0.85em;">无目录</span>';
+  }
+
+  function onScroll() {
+    const scrollTop = window.scrollY;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const scrollPercent = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+
+    // Progress bar
+    progressBar.style.width = Math.min(scrollPercent, 100) + '%';
+
+    // Back to top
+    if (scrollTop > 400) backToTop.classList.add('visible');
+    else backToTop.classList.remove('visible');
+
+    // Highlight active nav item
+    const links = sidebarNav.querySelectorAll('a');
+    let currentId = '';
+    contentEl.querySelectorAll('h1, h2, h3').forEach(h => {
+      if (h.getBoundingClientRect().top <= 120) currentId = h.id;
+    });
+    links.forEach(a => {
+      a.classList.toggle('active', a.getAttribute('href') === '#' + currentId);
+    });
+  }
+
+  // Trigger initial scroll
+  onScroll();
 })();
 </script>
 
