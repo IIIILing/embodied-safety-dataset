@@ -126,7 +126,7 @@ python3 batch_generate.py -i data/instructions/unsafe_instructions.jsonl --use-a
 @dataset{embodied-safety-2026,
   title     = {Embodied Safety Dataset: A Benchmark for Safe Embodied AI},
   year      = {2026},
-  url       = {https://github.com/your-org/embodied-safety-dataset}
+  url       = {https://github.com/IIIILing/embodied-safety-dataset}
 }
 ```
 
