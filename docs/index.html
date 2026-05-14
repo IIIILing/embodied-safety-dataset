@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SafeManiBench — 具身智能安全评估数据集与评测基准</title>
+  <title>Embodied Safety Dataset — 具身智能安全评估数据集与评测基准</title>
   <meta name="description" content="面向具身智能安全评估的大规模仿真数据集，30万安全风险场景，覆盖5类危险源，110个标准化评测任务">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡</text></svg>">
   <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
@@ -390,7 +390,7 @@
      ═══════════════════════════════════════════════════════════════ -->
 <header class="header">
   <button class="menu-btn" id="menuBtn">☰</button>
-  <div class="logo"><span>🛡</span> SafeManiBench</div>
+  <div class="logo"><span>🛡</span> Embodied Safety Dataset</div>
   <div class="spacer"></div>
   <a href="#quickstart" class="header-link">快速开始</a>
   <a href="#data" class="header-link">数据</a>
@@ -419,7 +419,7 @@
   </nav>
   <div class="nav-section">评测</div>
   <nav>
-    <a href="#benchmark">SafeManiBench 基准</a>
+    <a href="#benchmark">Embodied Safety Dataset 基准</a>
     <a href="#quickstart">快速开始</a>
   </nav>
   <div class="nav-section">项目</div>
@@ -437,7 +437,7 @@
   <!-- ─── HERO ──────────────────────────────────────── -->
   <section class="hero" id="hero">
     <div class="hero-badge">USENIX Security 2026</div>
-    <h1><span>SafeManiBench</span></h1>
+    <h1><span>Embodied Safety Dataset</span></h1>
     <p class="desc">
       面向具身智能安全评估的大规模仿真数据集与评测基准。<br>
       基于大语言模型，结合 WHO 伤害监测指南与 ISO 10218 国际安全标准，<br>
@@ -485,7 +485,7 @@ flowchart LR
     H -->|"L3 物理碰撞检测"| I
     H -->|"未通过"| J["丢弃或修正"]
     I --> K["安全场景数据集<br/>4 类场景"]
-    K --> L["SafeManiBench<br/>110 任务评测基准"]
+    K --> L["Embodied Safety Dataset<br/>110 任务评测基准"]
       </div>
 
       <div class="pipeline">
@@ -665,7 +665,7 @@ flowchart LR
   <!-- ─── BENCHMARK ─────────────────────────────────── -->
   <section class="section section-alt" id="benchmark">
     <div class="section-inner">
-      <h2 class="section-title">SafeManiBench 评测基准</h2>
+      <h2 class="section-title">Embodied Safety Dataset 评测基准</h2>
       <p class="section-subtitle">
         从 30 万场景中精选 <strong>110 个标准化任务</strong>（90 危险 + 20 良性对照），形成系统化评测基准。
       </p>
@@ -741,7 +741,7 @@ flowchart LR
       <div class="stats-row">
         <div class="stat-card"><div class="stat-num">300K</div><div class="stat-label">BDDL 行为定义文件</div></div>
         <div class="stat-card"><div class="stat-num">300K</div><div class="stat-label">JSON 场景配置文件</div></div>
-        <div class="stat-card"><div class="stat-num">110</div><div class="stat-label">SafeManiBench 精选任务</div></div>
+        <div class="stat-card"><div class="stat-num">110</div><div class="stat-label">Embodied Safety Dataset 精选任务</div></div>
         <div class="stat-card"><div class="stat-num">4 大类</div><div class="stat-label">10 子类 · 5 类危险源</div></div>
         <div class="stat-card"><div class="stat-num">20+</div><div class="stat-label">物体类型</div></div>
         <div class="stat-card"><div class="stat-num">10 万+</div><div class="stat-label">不重复有害指令</div></div>
@@ -805,11 +805,11 @@ python visualize.py -s data/scenes/scene_0000.json -o outputs/screenshots/</div>
   <section class="section section-alt" id="citation">
     <div class="section-inner">
       <h2 class="section-title">引用</h2>
-      <p class="section-subtitle">如使用本数据集或 SafeManiBench 评测基准，请引用以下文献。</p>
+      <p class="section-subtitle">如使用本数据集或 Embodied Safety Dataset 评测基准，请引用以下文献。</p>
       <div class="citation-box">
         <div class="bibtex">
 @inproceedings{embodied-safety-2026,<br>
-&nbsp;&nbsp;title&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= {SafeManiBench: Benchmarking Embodied AI on Safe-related Everyday Activities},<br>
+&nbsp;&nbsp;title&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= {Embodied Safety Dataset: Benchmarking Embodied AI on Safe-related Everyday Activities},<br>
 &nbsp;&nbsp;year&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= {2026},<br>
 &nbsp;&nbsp;booktitle = {USENIX Security Symposium},<br>
 &nbsp;&nbsp;url&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= {https://github.com/IIIILing/embodied-safety-dataset}<br>
