@@ -213,6 +213,7 @@ python visualize.py -s data/scenes/scene_0000.json -o outputs/screenshots/
   title     = {SafeManiBench: Benchmarking Embodied AI on Safe-related Everyday Activities},
   year      = {2026},
   booktitle = {USENIX Security Symposium},
+  url       = {https://github.com/IIIILing/embodied-safety-dataset}
 }
 ```
 
